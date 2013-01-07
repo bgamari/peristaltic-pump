@@ -3,11 +3,11 @@ pump_wall = 6;
 pump_dia = 150;
 pump_h = 2*tube_dia;
 
-fudge = 0.3*tube_dia;
+fudge = 0.2*tube_dia;
 rotor_plate_h = 2;
 
 bearing_outer_dia = 22;
-bearing_inner_dia = 8;
+bearing_inner_dia = 8 - 0.25;
 bearing_h = 7;
 
 module wall_cross_section() {
@@ -97,7 +97,7 @@ module rotor(include_bearings = false) {
             cylinder(r=20, h=3*rotor_plate_h);
         }
             
-        rotate(45) shaft_clamp(6, 25, 20, $fn=40);
+        rotate(45) shaft_clamp(6+0.4, 25, 20, $fn=40);
 
         for (theta = [0:360/n_wheels:360])
         rotate(theta)
