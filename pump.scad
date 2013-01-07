@@ -10,6 +10,9 @@ bearing_outer_dia = 22;
 bearing_inner_dia = 8 - 0.25;
 bearing_h = 7;
 
+m3_head_h = 3.1;
+m3_head_dia = 6;
+
 module wall_cross_section() {
     translate([pump_dia/2,0])
     polygon([
@@ -30,22 +33,28 @@ module pump_base() {
     union() {
         translate([0,0,-pump_h/2-base_h/2])
         difference() {
-            cylinder(r=base_dia/2, h=base_h, center=true);
+            union() {
+                cylinder(r=base_dia/2, h=base_h, center=true);
+                translate([7,0,-4])
+                cylinder(r=38/2, h=4);
+            }
 
             // Shaft hole
-            cylinder(r=13/2, h=3*base_h, center=true);
+            cylinder(r=13/2, h=10*base_h, center=true);
             translate([7,0,0]) {
                 for (theta = [-90,90,0, 26.6,-26.6,180-26.6,180+26.6])
                 rotate(theta)
-                translate([31/2, 0, 0])
-                cylinder(r=3/2, h=3*base_h, center=true);
+                translate([31/2, 0, 0]) {
+                    cylinder(r=3/2, h=10*base_h, center=true);
+                    cylinder(r=m3_head_dia/2, h=2*m3_head_h, center=true);
+                }
             }
 
             // Screw holes
             for (theta = [0:30:360]) {
                 rotate(theta)
                 translate([base_dia/2-3,0,0])
-                cylinder(r=3/2, h=2*base_h, center=true, $fn=16);
+                cylinder(r=3/2, h=10*base_h, center=true, $fn=16);
             }
         }
 
@@ -108,7 +117,7 @@ module rotor(include_bearings = false) {
             cylinder(r=20, h=3*rotor_plate_h);
         }
             
-        rotate(45) shaft_clamp(6+0.4, 25, 20, $fn=40);
+        rotate(45) shaft_clamp(6+0.4, 25, 15, $fn=40);
 
         for (theta = [0:360/n_wheels:360])
         rotate(theta)
