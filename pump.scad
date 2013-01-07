@@ -64,6 +64,24 @@ module bearing() {
     }
 }
 
+module shaft_clamp(shaft_dia, outer_dia, height, nut_pos=0.5, nut_width=7.1, nut_thickness=3.1, bolt_dia=4) {
+    nut_z = height*nut_pos;
+    h = height - nut_z + nut_width/2;
+    difference() {
+        cylinder(r=outer_dia/2, h=height);
+
+        translate([0,0,-height]) cylinder(r=shaft_dia/2, h=3*height);
+
+        translate([shaft_dia/2 + (outer_dia-shaft_dia)/2 - 2*nut_thickness, 0, 0])
+        translate([0, 0, nut_z+h-nut_width/2])
+        cube([nut_thickness, nut_width, 2*h], center=true);
+
+        translate([0,0, nut_z])
+        rotate([0,90,0])
+        cylinder(r=bolt_dia/2, h=2*outer_dia);
+    }
+}
+
 module rotor(include_bearings = false) {
     n_wheels = 4;
     rotor_dia = pump_dia - bearing_outer_dia - 2*fudge;
@@ -71,6 +89,9 @@ module rotor(include_bearings = false) {
         color("steelblue")
         translate([0,0,-rotor_plate_h])
         cylinder(r=rotor_dia/2 + bearing_inner_dia/2, h=rotor_plate_h);
+
+
+        rotate(45) shaft_clamp(6, 25, 20, $fn=40);
 
         for (theta = [0:360/n_wheels:360])
         rotate(theta)
