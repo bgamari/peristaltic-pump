@@ -1,0 +1,7 @@
+# Peristaltic pump
+
+This is an OpenSCAD design for a 3D-printable peristaltic pump.
+The rollers are 608 bearings and the motor is a 6mm shaft motor such
+as Pololu's [1106](http://www.pololu.com/catalog/product/1106) 100:1
+gear motor.
+
