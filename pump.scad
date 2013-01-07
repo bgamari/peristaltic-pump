@@ -88,9 +88,15 @@ module rotor(include_bearings = false) {
     union() {
         color("steelblue")
         translate([0,0,-rotor_plate_h])
-        cylinder(r=rotor_dia/2 + bearing_inner_dia/2, h=rotor_plate_h);
-
-
+        difference() {
+            cylinder(r=rotor_dia/2 + bearing_inner_dia/2, h=rotor_plate_h);
+            
+            for (theta = [360/n_wheels/2:360/n_wheels:360])
+            rotate(theta)
+            translate([0.3*rotor_dia, 0, -rotor_plate_h])
+            cylinder(r=20, h=3*rotor_plate_h);
+        }
+            
         rotate(45) shaft_clamp(6, 25, 20, $fn=40);
 
         for (theta = [0:360/n_wheels:360])
@@ -107,5 +113,9 @@ module rotor(include_bearings = false) {
 }
 
 pump_base($fn=80);
-translate([0,0,-pump_h/2+rotor_plate_h]) rotor(true);
+
+rotate(45)
+translate([0,0,-pump_h/2+rotor_plate_h])
+rotor(true);
+
 
