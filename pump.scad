@@ -4,7 +4,7 @@ pump_dia = 150;
 pump_h = 2*tube_dia;
 
 fudge = 0.2*tube_dia;
-rotor_plate_h = 2;
+rotor_plate_h = 2.5;
 
 bearing_outer_dia = 22;
 bearing_inner_dia = 8 - 0.25;
@@ -45,7 +45,7 @@ module pump_base() {
                 for (theta = [-90,90,0, 26.6,-26.6,180-26.6,180+26.6])
                 rotate(theta)
                 translate([31/2, 0, 0]) {
-                    cylinder(r=3/2, h=10*base_h, center=true);
+                    cylinder(r=3.1/2, h=10*base_h, center=true);
                     cylinder(r=m3_head_dia/2, h=2*m3_head_h, center=true);
                 }
             }
@@ -54,7 +54,7 @@ module pump_base() {
             for (theta = [0:30:360]) {
                 rotate(theta)
                 translate([base_dia/2-3,0,0])
-                cylinder(r=3/2, h=10*base_h, center=true, $fn=16);
+                cylinder(r=3.1/2, h=10*base_h, center=true, $fn=16);
             }
         }
 
@@ -111,19 +111,24 @@ module rotor(include_bearings = false) {
         difference() {
             cylinder(r=rotor_dia/2 + bearing_inner_dia/2, h=rotor_plate_h);
             
+            // Shaft hole
+            cylinder(r=13/2, h=3*rotor_plate_h, center=true);
+
+            // Cut out holes
             for (theta = [360/n_wheels/2:360/n_wheels:360])
             rotate(theta)
             translate([0.3*rotor_dia, 0, -rotor_plate_h])
             cylinder(r=20, h=3*rotor_plate_h);
         }
             
+        color("steelblue")
         rotate(45) shaft_clamp(6+0.4, 25, 15, $fn=40);
 
         for (theta = [0:360/n_wheels:360])
         rotate(theta)
         translate([rotor_dia/2,0,0]) {
             color("steelblue")
-            cylinder(r=bearing_inner_dia/2, h=1.2*bearing_h);
+            cylinder(r=bearing_inner_dia/2, h=1.5*bearing_h);
 
             if (include_bearings)
             color("brown")
@@ -138,11 +143,18 @@ module motor() {
     cylinder(r=6/2, h=15);
 }
 
-pump_base($fn=80);
+module mockup() {
+    pump_base($fn=80);
 
-if (true)
-rotate(45)
-translate([0,0,-pump_h/2+rotor_plate_h])
-rotor(true);
+    if (true)
+    rotate(45)
+    translate([0,0,-pump_h/2+rotor_plate_h])
+    rotor(true);
 
-motor();
+    motor();
+}
+
+//mockup();
+
+//pump_base($fn=80);
+rotor(false);
