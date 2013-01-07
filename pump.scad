@@ -3,7 +3,7 @@ pump_wall = 6;
 pump_dia = 150;
 pump_h = 2*tube_dia;
 
-fudge = 0.2*tube_dia;
+fudge = 3.5;
 rotor_plate_h = 2.5;
 
 bearing_outer_dia = 22;
@@ -128,7 +128,7 @@ module rotor(include_bearings = false) {
         rotate(theta)
         translate([rotor_dia/2,0,0]) {
             color("steelblue")
-            cylinder(r=bearing_inner_dia/2, h=1.5*bearing_h);
+            cylinder(r=bearing_inner_dia/2, h=1.7*bearing_h);
 
             if (include_bearings)
             color("brown")
@@ -149,7 +149,7 @@ module mockup() {
     if (true)
     rotate(45)
     translate([0,0,-pump_h/2+rotor_plate_h])
-    rotor(true);
+    rotor(true, $fn=48);
 
     motor();
 }
@@ -157,4 +157,4 @@ module mockup() {
 //mockup();
 
 //pump_base($fn=80);
-rotor(false);
+rotor(false, $fn=48);
