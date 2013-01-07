@@ -10,6 +10,19 @@ bearing_outer_dia = 22;
 bearing_inner_dia = 8;
 bearing_h = 7;
 
+module wall_cross_section() {
+    translate([pump_dia/2,0])
+    polygon([
+            [-tube_dia/3,0],
+            [pump_wall,0],
+            [pump_wall, pump_h],
+            [-tube_dia/3, pump_h],
+            [0, 2*pump_h/3],
+            [0, 1*pump_h/3],
+            [-tube_dia/3,0],
+            ]);
+}
+
 module pump_base() {
     base_h = 2;
     base_dia = pump_dia+tube_dia/2+2*pump_wall+15;
@@ -26,8 +39,9 @@ module pump_base() {
         }
 
         difference() {
-            cylinder(r=pump_dia/2+pump_wall, h=pump_h, center=true);
-            cylinder(r=pump_dia/2, h=2*pump_h, center=true);
+            translate([0,0,-pump_h/2])
+            rotate_extrude()
+            wall_cross_section();
 
             // Cut out opening
             linear_extrude(h=2*pump_h, center=true) {
