@@ -107,6 +107,5 @@ module rotor(include_bearings = false) {
 }
 
 pump_base($fn=80);
-translate([0,0,-pump_h/2+rotor_plate_h])
-rotor(true);
+translate([0,0,-pump_h/2+rotor_plate_h]) rotor(true);
 
