@@ -31,6 +31,17 @@ module pump_base() {
         translate([0,0,-pump_h/2-base_h/2])
         difference() {
             cylinder(r=base_dia/2, h=base_h, center=true);
+
+            // Shaft hole
+            cylinder(r=13/2, h=3*base_h, center=true);
+            translate([7,0,0]) {
+                for (theta = [-90,90,0, 26.6,-26.6,180-26.6,180+26.6])
+                rotate(theta)
+                translate([31/2, 0, 0])
+                cylinder(r=3/2, h=3*base_h, center=true);
+            }
+
+            // Screw holes
             for (theta = [0:30:360]) {
                 rotate(theta)
                 translate([base_dia/2-3,0,0])
@@ -112,10 +123,17 @@ module rotor(include_bearings = false) {
     }
 }
 
+module motor() {
+    color("red")
+    translate([0,0,-pump_h/2])
+    cylinder(r=6/2, h=15);
+}
+
 pump_base($fn=80);
 
+if (true)
 rotate(45)
 translate([0,0,-pump_h/2+rotor_plate_h])
 rotor(true);
 
-
+motor();
