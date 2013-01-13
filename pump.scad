@@ -80,9 +80,10 @@ module pump_base() {
             }
         }
 
+        // Tube hold-offs
         for (theta = [opening_angle/5, -opening_angle/5])
         rotate(theta)
-        translate([pump_dia/2,0,0])
+        translate([pump_dia/2+5,0,0])
         cylinder(r=4, h=pump_h+2, center=true);
     }
 }
