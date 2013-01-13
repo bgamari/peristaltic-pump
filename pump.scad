@@ -39,6 +39,12 @@ module pump_base() {
                 cylinder(r=38/2, h=4);
             }
 
+            // Cut out
+            for (theta=[0:90:360])
+            rotate(theta)
+            translate([base_dia/4,0,0])
+            cylinder(r=base_dia/7, h=2*base_h, center=true);
+
             // Shaft hole
             cylinder(r=13/2, h=10*base_h, center=true);
             translate([7,0,0]) {
@@ -73,6 +79,11 @@ module pump_base() {
                         [0,0]]);
             }
         }
+
+        for (theta = [opening_angle/5, -opening_angle/5])
+        rotate(theta)
+        translate([pump_dia/2,0,0])
+        cylinder(r=4, h=pump_h+2, center=true);
     }
 }
 
@@ -156,5 +167,5 @@ module mockup() {
 
 //mockup();
 
-//pump_base($fn=80);
+pump_base($fn=80);
 rotor(false, $fn=48);
