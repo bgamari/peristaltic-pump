@@ -1,7 +1,7 @@
 tube_dia = 5;
 pump_wall = 6;
 pump_dia = 150;
-pump_h = 2*tube_dia;
+pump_h = 1.2*tube_dia;
 
 fudge = 3.5;
 rotor_plate_h = 2.5;
@@ -14,16 +14,21 @@ m3_head_h = 3.1;
 m3_head_dia = 6;
 
 module wall_cross_section() {
-    translate([pump_dia/2,0])
-    polygon([
-            [-tube_dia/3,0],
-            [pump_wall,0],
-            [pump_wall, pump_h],
-            [-tube_dia/3, pump_h],
-            [0, 2*pump_h/3],
-            [0, 1*pump_h/3],
-            [-tube_dia/3,0],
-            ]);
+    z = 0.4*bearing_h+rotor_plate_h;
+    translate([pump_dia/2,0]) {
+        translate([0,z])
+        polygon([
+                [-tube_dia/3,0],
+                [pump_wall,0],
+                [pump_wall, pump_h],
+                [-tube_dia/3, pump_h],
+                [0, 2*pump_h/3],
+                [0, 1*pump_h/3],
+                [-tube_dia/3,0],
+                ]);
+        translate([-tube_dia/3,0])
+        square([pump_wall + tube_dia/3, z]);
+    }
 }
 
 module pump_base() {
@@ -170,3 +175,4 @@ module mockup() {
 
 pump_base($fn=80);
 rotor(false, $fn=48);
+
