@@ -157,16 +157,13 @@ module rotor(include_bearings = false) {
 
             // Bearing mounting holes
             for (theta = [0:360/n_wheels:360])
-            rotate(theta)
+            rotate(theta-16)
+            for (phi = [0:8:32])
+            rotate(phi)
+            translate([-phi/8, 0, 0])
             translate([rotor_dia/2, 0, 3])
-            for (i = [-4:0]) {
-                translate([4*i, 4*i, 0])
-                countersunk_m4();
-                translate([4*(i+0.5)-5, 4*(i+0.5)+5, 0])
-                countersunk_m4();
-                translate([4*(i+2/3)-10, 4*(i+2/3)+10, 0])
-                countersunk_m4();
-                translate([4*(i+1/3)-15, 4*(i+1/3)+15, 0])
+            for (i = [0:2]) {
+                translate([-6*i, 0, 0])
                 countersunk_m4();
             }
         }
@@ -213,10 +210,10 @@ module mockup() {
     motor();
 }
 
-//mockup();
+mockup();
 
-pump_base($fn=80);
-rotor(false, $fn=48);
+//pump_base($fn=80);
+//rotor(false, $fn=48);
 
 rotate(45)
 for (theta = [0:10:30])
