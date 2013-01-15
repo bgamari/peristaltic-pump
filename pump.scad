@@ -45,11 +45,17 @@ module pump_base() {
                 cylinder(r=38/2, h=4);
             }
 
-            // Cut out
-            for (theta=[0:90:360])
+            // Large cutouts
+            for (theta=[45:90:360])
             rotate(theta)
             translate([base_dia/4,0,0])
             cylinder(r=base_dia/7, h=2*base_h, center=true);
+
+            // Small cutouts
+            for (theta=[0:90:360])
+            rotate(theta)
+            translate([3*base_dia/8,0,0])
+            cylinder(r=base_dia/15, h=2*base_h, center=true);
 
             // Shaft hole
             cylinder(r=13/2, h=10*base_h, center=true);
@@ -85,6 +91,7 @@ module pump_base() {
                         [0,0]]);
             }
 
+            // Tubing exit holes
             for (y = [0,1])
             mirror([0,y,0])
             translate([
@@ -169,7 +176,7 @@ module mockup() {
     pump_base($fn=80);
 
     if (true)
-    rotate(45)
+    rotate(720*$t)
     translate([0,0,-pump_h/2+rotor_plate_h])
     rotor(true, $fn=48);
 
