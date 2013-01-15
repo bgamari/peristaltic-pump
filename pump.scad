@@ -13,10 +13,11 @@ bearing_h = 7;
 m3_head_h = 3.1;
 m3_head_dia = 6;
 
+runway_h = 0.3*bearing_h+rotor_plate_h;
+
 module wall_cross_section() {
-    z = 0.4*bearing_h+rotor_plate_h;
     translate([pump_dia/2,0]) {
-        translate([0,z])
+        translate([0,runway_h])
         polygon([
                 [-tube_dia/3,0],
                 [pump_wall,0],
@@ -27,14 +28,14 @@ module wall_cross_section() {
                 [-tube_dia/3,0],
                 ]);
         translate([-tube_dia/3,0])
-        square([pump_wall + tube_dia/3, z]);
+        square([pump_wall + tube_dia/3, runway_h]);
     }
 }
 
 module pump_base() {
     base_h = 2;
     base_dia = pump_dia+tube_dia/2+2*pump_wall+15;
-    opening_angle=80;
+    opening_angle=30;
     union() {
         translate([0,0,-pump_h/2-base_h/2])
         difference() {
@@ -83,13 +84,17 @@ module pump_base() {
                         [cos(opening_angle/2), sin(opening_angle/2)],
                         [0,0]]);
             }
-        }
 
-        // Tube hold-offs
-        for (theta = [opening_angle/5, -opening_angle/5])
-        rotate(theta)
-        translate([pump_dia/2+5,0,0])
-        cylinder(r=4, h=pump_h+2, center=true);
+            for (y = [0,1])
+            mirror([0,y,0])
+            translate([
+                    pump_dia/2*cos(-opening_angle/2-15),
+                    pump_dia/2*sin(-opening_angle/2-15),
+                    runway_h
+                ])
+            rotate([0,90,30])
+            cylinder(r=1.1*tube_dia/2, h=40, center=true);
+        }
     }
 }
 
@@ -171,8 +176,8 @@ module mockup() {
     motor();
 }
 
-//mockup();
+mockup();
 
-pump_base($fn=80);
-rotor(false, $fn=48);
+//pump_base($fn=80);
+//rotor(false, $fn=48);
 
