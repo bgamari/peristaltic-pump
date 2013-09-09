@@ -146,7 +146,7 @@ module rotor(include_bearings = false) {
         color("steelblue")
         translate([0,0,-rotor_plate_h])
         difference() {
-            cylinder(r=rotor_dia/2 + bearing_inner_dia/2, h=rotor_plate_h);
+            cylinder(r=rotor_dia/2 + bearing_inner_dia/2, h=rotor_plate_h, $fn=80);
             
             // Shaft hole
             cylinder(r=13/2, h=3*rotor_plate_h, center=true);
@@ -187,14 +187,14 @@ module rotor(include_bearings = false) {
 module bearing_pin() {
     difference() {
         union() {
-            cylinder(r=bearing_inner_dia/2, h=1.5*bearing_h, $fn=80);
+            cylinder(r=bearing_inner_dia/2, h=1.5*bearing_h, $fn=40);
 
             translate([0, 0, 1.1*bearing_h])
-            cylinder(r=bearing_inner_dia/2+1.5, h=5, $fn=80);
+            cylinder(r=bearing_inner_dia/2+1.5, h=5, $fn=40);
         }
 
         // Screw hole
-        cylinder(r=4/2+0.1, h=6*bearing_h, center=true, $fn=80);
+        cylinder(r=4/2+0.1, h=6*bearing_h, center=true, $fn=40);
 
         // Nut trap
         translate([0,0,2*bearing_h])
