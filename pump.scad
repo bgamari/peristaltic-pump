@@ -5,7 +5,7 @@ pump_h = 1.2*tube_dia;
 
 rotor_plate_h = 4.5;
 
-n_wheels = 3;
+n_rollers = 3;
 bearing_outer_dia = 22;
 bearing_inner_dia = 8 - 0.25;
 bearing_h = 7;
@@ -150,13 +150,13 @@ module rotor(include_bearings = false) {
             cylinder(r=13/2, h=3*rotor_plate_h, center=true);
 
             // Cut out holes
-            for (theta = [360/n_wheels/2:360/n_wheels:360])
+            for (theta = [360/n_rollers/2:360/n_rollers:360])
             rotate(theta)
             translate([0.3*rotor_dia, 0, -rotor_plate_h])
             cylinder(r=20, h=3*rotor_plate_h);
 
             // Bearing mounting holes
-            for (theta = [0:360/n_wheels:360])
+            for (theta = [0:360/n_rollers:360])
             rotate(theta-16)
             for (phi = [0:8:32])
             rotate(phi)
@@ -171,7 +171,7 @@ module rotor(include_bearings = false) {
         color("steelblue")
         rotate(45) shaft_clamp(6+0.4, 25, 15, $fn=40);
 
-        for (theta = [0:360/n_wheels:360])
+        for (theta = [0:360/n_rollers:360])
         rotate(theta)
         translate([rotor_dia/2,0,0]) {
             if (include_bearings) {
