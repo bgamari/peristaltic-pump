@@ -184,7 +184,12 @@ module rotor(include_bearings = false) {
 
 module bearing_jig() {
     difference() {
-        cylinder(r=bearing_inner_dia/2, h=2*bearing_h, $fn=80);
+        union() {
+            cylinder(r=bearing_inner_dia/2, h=1.5*bearing_h, $fn=80);
+
+            translate([0, 0, 1.1*bearing_h])
+            cylinder(r=bearing_inner_dia/2+1.5, h=5, $fn=80);
+        }
         cylinder(r=4/2+0.1, h=6*bearing_h, center=true, $fn=80);
 
         // Nut trap
@@ -211,7 +216,7 @@ module mockup() {
     motor();
 }
 
-mockup();
+//mockup();
 
 //pump_base($fn=80);
 //rotor(false, $fn=48);
@@ -222,4 +227,3 @@ for (theta = [0:10:30])
 rotate(theta)
 translate([0.7*pump_dia,0,0])
 bearing_jig();
-
