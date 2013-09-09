@@ -176,13 +176,13 @@ module rotor(include_bearings = false) {
         translate([rotor_dia/2,0,0]) {
             if (include_bearings) {
                 color("brown") bearing();
-                bearing_jig();
+                bearing_pin();
             }
         }
     }
 }
 
-module bearing_jig() {
+module bearing_pin() {
     difference() {
         union() {
             cylinder(r=bearing_inner_dia/2, h=1.5*bearing_h, $fn=80);
@@ -226,4 +226,4 @@ rotate(45)
 for (theta = [0:10:30])
 rotate(theta)
 translate([0.7*pump_dia,0,0])
-bearing_jig();
+bearing_pin();
