@@ -174,9 +174,10 @@ module rotor(include_bearings = false) {
         for (theta = [0:360/n_wheels:360])
         rotate(theta)
         translate([rotor_dia/2,0,0]) {
-            if (include_bearings)
-            color("brown")
-            bearing();
+            if (include_bearings) {
+                color("brown") bearing();
+                bearing_jig();
+            }
         }
     }
 }
