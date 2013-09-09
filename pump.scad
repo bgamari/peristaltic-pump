@@ -1,11 +1,13 @@
 tube_dia = 5;
 pump_wall = 6;
 pump_dia = 120;
-pump_h = 1.2*tube_dia;
+pump_h = 1.5*tube_dia;
 
 rotor_plate_h = 4.5;
 
 n_rollers = 3;
+
+// 606 bearing
 bearing_outer_dia = 22;
 bearing_inner_dia = 8 - 0.25;
 bearing_h = 7;
@@ -42,29 +44,31 @@ module countersunk_m4() {
 }
 
 module pump_base() {
-    base_h = 2;
+    base_h = 5;
     base_dia = pump_dia+tube_dia/2+2*pump_wall+15;
     opening_angle=30;
     union() {
-        translate([0,0,-pump_h/2-base_h/2])
+        // plate
+        translate([0,0,-base_h/2])
         difference() {
+            translate([0,0,-base_h])
             union() {
-                cylinder(r=base_dia/2, h=base_h, center=true);
-                translate([7,0,-4])
-                cylinder(r=38/2, h=4);
+                cylinder(r=base_dia/2, h=base_h);
+                translate([7,0,0])
+                cylinder(r=38/2, h=base_h);
             }
 
             // Large cutouts
             for (theta=[45:90:360])
             rotate(theta)
             translate([base_dia/4,0,0])
-            cylinder(r=base_dia/7, h=2*base_h, center=true);
+            cylinder(r=base_dia/8, h=3*base_h, center=true);
 
             // Small cutouts
             for (theta=[0:90:360])
             rotate(theta)
-            translate([3*base_dia/8,0,0])
-            cylinder(r=base_dia/15, h=2*base_h, center=true);
+            translate([0.3*base_dia,0,0])
+            cylinder(r=base_dia/16, h=3*base_h, center=true);
 
             // Shaft hole
             cylinder(r=13/2, h=10*base_h, center=true);
@@ -85,6 +89,7 @@ module pump_base() {
             }
         }
 
+        // wall
         difference() {
             translate([0,0,-pump_h/2])
             rotate_extrude()
@@ -144,7 +149,6 @@ module rotor(include_bearings = false) {
     rotor_dia = pump_dia - bearing_outer_dia+8;
     union() {
         color("steelblue")
-        translate([0,0,-rotor_plate_h])
         difference() {
             cylinder(r=rotor_dia/2 + bearing_inner_dia/2, h=rotor_plate_h, $fn=80);
             
@@ -171,15 +175,15 @@ module rotor(include_bearings = false) {
         }
             
         color("steelblue")
-        rotate(45) shaft_clamp(6+0.4, 25, 15, $fn=40);
+        translate([0,0,rotor_plate_h])
+        rotate(45) shaft_clamp(6+0.1, 25, 15, $fn=40);
 
+        if (include_bearings)
         for (theta = [0:360/n_rollers:360])
         rotate(theta)
-        translate([rotor_dia/2,0,0]) {
-            if (include_bearings) {
+        translate([rotor_dia/2, 0, rotor_plate_h + 0.5]) {
                 color("brown") bearing();
                 bearing_pin();
-            }
         }
     }
 }
@@ -211,12 +215,12 @@ module motor() {
 
 module mockup() {
     union() {
-        pump_base($fn=80);
+        pump_base($fn=30);
 
         if (true)
         rotate(720*$t)
-        translate([0,0,-pump_h/2+rotor_plate_h])
-        rotor(true, $fn=48);
+        translate([0,0,-2])
+        rotor(true);
 
         motor();
     }
@@ -241,8 +245,8 @@ module print_plate_2() {
     }
 }
 
-//mockup();
-print_plate_1();
+mockup();
+//print_plate_1();
 //print_plate_2();
 
 
