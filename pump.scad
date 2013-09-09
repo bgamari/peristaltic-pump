@@ -166,8 +166,8 @@ module rotor(include_bearings = false) {
             rotate(theta-16)
             for (phi = [0:8:32])
             rotate(phi)
-            translate([-phi/8, 0, 0])
-            translate([rotor_dia/2, 0, 3])
+            translate([-phi/6, 0, 0])
+            translate([rotor_dia/2 - 1, 0, 3])
             for (i = [0:2]) {
                 translate([-6*i, 0, 0])
                 countersunk_m4();
@@ -228,7 +228,6 @@ module mockup() {
 
 module print_plate_1() {
     union() {
-        translate([0,0,rotor_plate_h])
         rotor(false, $fn=48);
 
         rotate(45)
