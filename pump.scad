@@ -216,14 +216,23 @@ module mockup() {
     motor();
 }
 
+module print_plate_1() {
+    translate([0,0,rotor_plate_h])
+    rotor(false, $fn=48);
+    
+    rotate(45)
+    for (theta = [0:10:30])
+    rotate(theta)
+    translate([0.6*pump_dia,0,0])
+    bearing_pin();
+}
+
+module print_plate_2() {
+    pump_base($fn=80);
+}
+
 //mockup();
+print_plate_1();
+//print_plate_2();
 
-//pump_base($fn=80);
-//rotor(false, $fn=48);
 
-if (true)
-rotate(45)
-for (theta = [0:10:30])
-rotate(theta)
-translate([0.7*pump_dia,0,0])
-bearing_pin();
