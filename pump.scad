@@ -33,10 +33,12 @@ module wall_cross_section() {
 }
 
 module countersunk_m4() {
-    translate([0,0,-1])
-    cylinder(r=4/2, h=40);
-    translate([0,0,-40])
-    cylinder(r=8/2, h=40);
+    union() {
+        translate([0,0,-1])
+        cylinder(r=4/2, h=40);
+        translate([0,0,-40])
+        cylinder(r=8/2, h=40);
+    }
 }
 
 module pump_base() {
@@ -190,6 +192,8 @@ module bearing_pin() {
             translate([0, 0, 1.1*bearing_h])
             cylinder(r=bearing_inner_dia/2+1.5, h=5, $fn=80);
         }
+
+        // Screw hole
         cylinder(r=4/2+0.1, h=6*bearing_h, center=true, $fn=80);
 
         // Nut trap
@@ -206,29 +210,35 @@ module motor() {
 }
 
 module mockup() {
-    pump_base($fn=80);
+    union() {
+        pump_base($fn=80);
 
-    if (true)
-    rotate(720*$t)
-    translate([0,0,-pump_h/2+rotor_plate_h])
-    rotor(true, $fn=48);
+        if (true)
+        rotate(720*$t)
+        translate([0,0,-pump_h/2+rotor_plate_h])
+        rotor(true, $fn=48);
 
-    motor();
+        motor();
+    }
 }
 
 module print_plate_1() {
-    translate([0,0,rotor_plate_h])
-    rotor(false, $fn=48);
-    
-    rotate(45)
-    for (theta = [0:10:30])
-    rotate(theta)
-    translate([0.6*pump_dia,0,0])
-    bearing_pin();
+    union() {
+        translate([0,0,rotor_plate_h])
+        rotor(false, $fn=48);
+
+        rotate(45)
+        for (theta = [0:10:30])
+        rotate(theta)
+        translate([0.6*pump_dia,0,0])
+        bearing_pin();
+    }
 }
 
 module print_plate_2() {
-    pump_base($fn=80);
+    union() {
+        pump_base($fn=80);
+    }
 }
 
 //mockup();
