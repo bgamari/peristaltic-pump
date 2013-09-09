@@ -1,10 +1,11 @@
 tube_dia = 5;
 pump_wall = 6;
-pump_dia = 150;
+pump_dia = 120;
 pump_h = 1.2*tube_dia;
 
 rotor_plate_h = 4.5;
 
+n_wheels = 3;
 bearing_outer_dia = 22;
 bearing_inner_dia = 8 - 0.25;
 bearing_h = 7;
@@ -77,7 +78,7 @@ module pump_base() {
             // Screw holes
             for (theta = [0:30:360]) {
                 rotate(theta)
-                translate([base_dia/2-3,0,0])
+                translate([base_dia/2-4,0,0])
                 cylinder(r=3.1/2, h=10*base_h, center=true, $fn=16);
             }
         }
@@ -138,8 +139,7 @@ module shaft_clamp(shaft_dia, outer_dia, height, nut_pos=0.5, nut_width=7.1, nut
 }
 
 module rotor(include_bearings = false) {
-    n_wheels = 4;
-    rotor_dia = pump_dia - bearing_outer_dia+2;
+    rotor_dia = pump_dia - bearing_outer_dia+8;
     union() {
         color("steelblue")
         translate([0,0,-rotor_plate_h])
