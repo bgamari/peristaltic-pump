@@ -23,7 +23,7 @@ m4_nut_thickness = 3.4;
 
 runway_h = 0.3*bearing_h+rotor_plate_h;
 
-delta = 0.01;
+delta = 0.05;
 
 module wall_cross_section() {
     translate([pump_dia/2,0]) {
@@ -147,7 +147,7 @@ module setscrew(lm, lp, h) {
 }
 
 module rotor(include_bearings = false) {
-    rotor_dia = pump_dia - bearing_outer_dia+3;
+    rotor_dia = pump_dia - bearing_outer_dia+2;
     union() {
         color("steelblue")
         difference() {
@@ -156,13 +156,20 @@ module rotor(include_bearings = false) {
                 cylinder(r=10, h=rotor_plate_h+10);
             }
             
-            // Cut out holes
+            // Cut outs
             for (theta = [360/n_rollers/2:360/n_rollers:360])
             rotate(theta)
             translate([0.3*rotor_dia, 0, -rotor_plate_h])
             cylinder(r=20, h=3*rotor_plate_h);
 
+            // Small cut outs
+            for (theta = [0:360/n_rollers:360])
+            rotate(theta)
+            translate([0.3*rotor_dia, 0, -rotor_plate_h])
+            cylinder(r=8, h=3*rotor_plate_h);
+
             // Bearing mounting holes
+            translate([0, 0, -delta])
             for (theta = [0:360/n_rollers:360])
             rotate(theta-22)
             for (phi = [0:8:40])
@@ -175,7 +182,7 @@ module rotor(include_bearings = false) {
             }
 
             // Shaft
-            cylinder(r=6.2/2, h=30);
+            cylinder(r=6.2/2, h=50, center=true);
 
             // Set screw for shaft
             rotate(180)
@@ -236,8 +243,7 @@ module print_plate_1() {
     union() {
         rotor(false, $fn=48);
 
-        rotate(45)
-        for (theta = [0:10:30])
+        for (theta = [-15:15:15])
         rotate(theta)
         translate([0.6*pump_dia,0,0])
         mirror([0,0,180])
@@ -251,7 +257,7 @@ module print_plate_2() {
     }
 }
 
-mockup();
+//mockup();
 //print_plate_1();
-//print_plate_2();
+print_plate_2();
 //rotor(false, $fn=48);
