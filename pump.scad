@@ -52,7 +52,7 @@ module countersunk_m4(h=40) {
 
 module pump_base() {
     base_h = 5;
-    base_dia = pump_dia+tube_dia/2+2*pump_wall+15;
+    base_dia = pump_dia+tube_dia/2+2*pump_wall - 4;
     opening_angle=30;
     union() {
         // plate
@@ -68,14 +68,14 @@ module pump_base() {
             // Large cutouts
             for (theta=[45:90:360])
             rotate(theta)
-            translate([base_dia/4,0,0])
-            cylinder(r=base_dia/8, h=3*base_h, center=true);
+            translate([0.28*base_dia,0,0])
+            cylinder(r=0.12*base_dia, h=3*base_h, center=true);
 
             // Small cutouts
             for (theta=[0:90:360])
             rotate(theta)
             translate([0.3*base_dia,0,0])
-            cylinder(r=base_dia/16, h=3*base_h, center=true);
+            cylinder(r=0.08*base_dia, h=3*base_h, center=true);
 
             // Shaft hole
             cylinder(r=13/2, h=10*base_h, center=true);
@@ -89,10 +89,11 @@ module pump_base() {
             }
 
             // Screw holes
-            for (theta = [0:30:360]) {
+            for (theta = [360/16:360/8:360]) {
                 rotate(theta)
-                translate([base_dia/2-4,0,0])
-                cylinder(r=m3_dia/2, h=10*base_h, center=true);
+                translate([pump_dia/2 - 8, 0, -m4_head_h/2])
+                mirror([0,0,-1])
+                countersunk_m4();
             }
         }
 
