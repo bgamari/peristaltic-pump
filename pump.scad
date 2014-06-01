@@ -1,9 +1,9 @@
-tube_dia = 5;
+tube_dia = 8.5;
 pump_wall = 6;
 pump_dia = 120;
-pump_h = 1.5*tube_dia;
+pump_h = 1.6*tube_dia;
 
-rotor_plate_h = 4.5;
+rotor_plate_h = 6;
 
 n_rollers = 3;
 
@@ -12,10 +12,18 @@ bearing_outer_dia = 22;
 bearing_inner_dia = 8 - 0.25;
 bearing_h = 7;
 
+m3_dia = 3.2;
 m3_head_h = 3.1;
 m3_head_dia = 6;
+m4_dia = 4.2;
+m4_head_h = 4.5; // liberally
+m4_head_dia = 7.5;
+m4_nut_width = 7.2;
+m4_nut_thickness = 3.4;
 
 runway_h = 0.3*bearing_h+rotor_plate_h;
+
+delta = 0.01;
 
 module wall_cross_section() {
     translate([pump_dia/2,0]) {
@@ -34,12 +42,11 @@ module wall_cross_section() {
     }
 }
 
-module countersunk_m4() {
+module countersunk_m4(h=40) {
     union() {
-        translate([0,0,-1])
-        cylinder(r=4/2, h=40);
-        translate([0,0,-40])
-        cylinder(r=8/2, h=40);
+        cylinder(r=m4_dia/2, h=h);
+        translate([0,0,-h])
+        cylinder(r=m4_head_dia/2, h=h+delta);
     }
 }
 
@@ -76,7 +83,7 @@ module pump_base() {
                 for (theta = [-90,90,0, 26.6,-26.6,180-26.6,180+26.6])
                 rotate(theta)
                 translate([31/2, 0, 0]) {
-                    cylinder(r=3.1/2, h=10*base_h, center=true);
+                    cylinder(r=m3_dia/2, h=10*base_h, center=true);
                     cylinder(r=m3_head_dia/2, h=2*m3_head_h, center=true);
                 }
             }
@@ -85,7 +92,7 @@ module pump_base() {
             for (theta = [0:30:360]) {
                 rotate(theta)
                 translate([base_dia/2-4,0,0])
-                cylinder(r=3.1/2, h=10*base_h, center=true, $fn=16);
+                cylinder(r=m3_dia/2, h=10*base_h, center=true, $fn=16);
             }
         }
 
@@ -127,7 +134,9 @@ module bearing() {
     }
 }
 
-module shaft_clamp(shaft_dia, outer_dia, height, nut_pos=0.5, nut_width=7.1, nut_thickness=3.1, bolt_dia=4) {
+module shaft_clamp(shaft_dia, outer_dia, height,
+                   nut_pos=0.3, nut_width=m4_nut_width, nut_thickness=m4_nut_thickness,
+                   bolt_dia=m4_dia) {
     nut_z = height*nut_pos;
     h = height - nut_z + nut_width/2;
     difference() {
@@ -135,7 +144,7 @@ module shaft_clamp(shaft_dia, outer_dia, height, nut_pos=0.5, nut_width=7.1, nut
 
         translate([0,0,-height]) cylinder(r=shaft_dia/2, h=3*height);
 
-        translate([shaft_dia/2 + (outer_dia-shaft_dia)/2 - 2*nut_thickness, 0, 0])
+        translate([shaft_dia/2 + (outer_dia-shaft_dia)/2 - 2*nut_thickness + 2, 0, 0])
         translate([0, 0, nut_z+h-nut_width/2])
         cube([nut_thickness, nut_width, 2*h], center=true);
 
@@ -146,7 +155,7 @@ module shaft_clamp(shaft_dia, outer_dia, height, nut_pos=0.5, nut_width=7.1, nut
 }
 
 module rotor(include_bearings = false) {
-    rotor_dia = pump_dia - bearing_outer_dia+8;
+    rotor_dia = pump_dia - bearing_outer_dia+3;
     union() {
         color("steelblue")
         difference() {
@@ -163,22 +172,23 @@ module rotor(include_bearings = false) {
 
             // Bearing mounting holes
             for (theta = [0:360/n_rollers:360])
-            rotate(theta-16)
-            for (phi = [0:8:32])
+            rotate(theta-22)
+            for (phi = [0:8:40])
             rotate(phi)
-            translate([-phi/6, 0, 0])
-            translate([rotor_dia/2 - 1, 0, 3])
-            for (i = [0:2]) {
-                translate([-6*i, 0, 0])
+            translate([-phi/16, 0, 0])
+            translate([rotor_dia/2 - 1, 0, m4_head_h])
+            for (i = [0:1]) {
+                translate([-5*i, 0, 0])
                 countersunk_m4();
             }
         }
             
         color("steelblue")
         translate([0,0,rotor_plate_h])
-        rotate(45) shaft_clamp(6+0.1, 25, 15, $fn=40);
+        rotate(180) shaft_clamp(6+0.1, 20, 15, $fn=40);
 
         if (include_bearings)
+        rotate(-20)
         for (theta = [0:360/n_rollers:360])
         rotate(theta)
         translate([rotor_dia/2, 0, rotor_plate_h + 0.5]) {
@@ -198,12 +208,12 @@ module bearing_pin() {
         }
 
         // Screw hole
-        cylinder(r=4/2+0.1, h=6*bearing_h, center=true, $fn=40);
+        cylinder(r=m4_dia/2+0.1, h=6*bearing_h, center=true, $fn=40);
 
         // Nut trap
         translate([0,0,2*bearing_h])
         linear_extrude(height=2*3, center=true)
-        circle(r=6/2, $fn=6);
+        circle(r=m4_nut_width/2, $fn=6);
     }
 }
 
@@ -234,6 +244,7 @@ module print_plate_1() {
         for (theta = [0:10:30])
         rotate(theta)
         translate([0.6*pump_dia,0,0])
+        mirror([0,0,180])
         bearing_pin();
     }
 }
@@ -247,5 +258,4 @@ module print_plate_2() {
 mockup();
 //print_plate_1();
 //print_plate_2();
-
-
+//rotor(false, $fn=48);
