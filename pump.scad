@@ -1,6 +1,6 @@
 tube_dia = 8.5;
 pump_wall = 6;
-pump_dia = 120;
+pump_dia = 116;
 pump_h = 1.6*tube_dia;
 
 rotor_plate_h = 6;
@@ -21,24 +21,22 @@ m4_head_dia = 7.5;
 m4_nut_width = 7.2;
 m4_nut_thickness = 3.4;
 
-runway_h = 0.3*bearing_h+rotor_plate_h;
+runway_h = 0.35*bearing_h+rotor_plate_h;
 
 delta = 0.05;
 
 module wall_cross_section() {
+    offset = -tube_dia/3;
     translate([pump_dia/2,0]) {
-        translate([0,runway_h])
-        polygon([
-                [-tube_dia/3,0],
-                [pump_wall,0],
-                [pump_wall, pump_h],
-                [-tube_dia/3, pump_h],
-                [0, 2*pump_h/3],
-                [0, 1*pump_h/3],
-                [-tube_dia/3,0],
-                ]);
-        translate([-tube_dia/3,0])
-        square([pump_wall + tube_dia/3, runway_h]);
+        difference() {
+            translate([offset,0])
+            square([pump_wall + tube_dia/3, pump_h+runway_h]);
+
+            translate([offset+1, 0])
+            translate([0, runway_h + 0.8*tube_dia])
+            scale([1, 1.2])
+            circle(r=tube_dia/2, $fn=16);
+        }
     }
 }
 
@@ -148,7 +146,8 @@ module setscrew(lm, lp, h) {
 }
 
 module rotor(include_bearings = false) {
-    rotor_dia = pump_dia - bearing_outer_dia+2;
+    pump_dia=120;
+    rotor_dia = pump_dia - bearing_outer_dia + 2;
     union() {
         color("steelblue")
         difference() {
@@ -262,3 +261,5 @@ module print_plate_2() {
 //print_plate_1();
 print_plate_2();
 //rotor(false, $fn=48);
+
+//wall_cross_section();
